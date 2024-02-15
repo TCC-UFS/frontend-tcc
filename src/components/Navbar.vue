@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex w-100 px-4 py-2 bg-slate-950">
+    <div class="d-flex w-100 px-4 py-2 dark:bg-emerald-900 bg-emerald-300">
       <div class="d-flex my-auto mr-2">
         <img class="w-8" :src="require('../assets/logo.png')" />
       </div>
@@ -8,7 +8,7 @@
         <li v-for="item in items" :key="item.id">
           <div
             @click="$router.push(item.path)"
-            class="d-flex hover:bg-slate-800 cursor-pointer px-4 py-2 rounded-md"
+            class="d-flex dark:hover:bg-emerald-800 hover:bg-emerald-400 cursor-pointer px-4 py-2 rounded-md"
           >
             <v-icon :icon="item.icon" class="my-auto" />
             <span class="my-auto ml-2">{{ item.text }}</span>
@@ -16,13 +16,13 @@
         </li>
       </ul>
       <v-spacer />
-      <div class="my-auto text-white mx-2" v-if="$route.path != '/login'">
+      <div class="my-auto dark:text-white mx-2" v-if="$route.path != '/login'">
         <v-btn
           variant="outlined"
           @click="loginDialog = true"
           v-if="!isUserLogged"
         >
-          Entrar no chat
+          Login
         </v-btn>
         <div v-else class="d-flex my-auto mx-2">
           <span class="mx-4 text-xl font-semibold">
@@ -63,13 +63,13 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!-- <div class="my-auto">
+      <div class="my-auto">
           <v-tooltip text="Alterar Tema" location="bottom">
             <template v-slot:activator="{ props }">
               <v-icon icon="mdi-circle-half-full" v-bind="props" @click="toggleDark(); toggleTheme();"></v-icon>
             </template>
           </v-tooltip>
-        </div> -->
+        </div>
     </div>
   </div>
 </template>
@@ -93,15 +93,15 @@ export default {
       },
       {
         id: crypto.randomUUID(),
-        text: "Grupos",
-        icon: "mdi-account-group",
-        path: "/groups",
+        text: "Leis ordinárias",
+        icon: "mdi-book-open-page-variant",
+        path: "/lei-ordinaria",
       },
       {
         id: crypto.randomUUID(),
-        text: "Usuarios",
-        icon: "mdi-account-multiple",
-        path: "/users",
+        text: "Leis complementares",
+        icon: "mdi-book-open-page-variant-outline",
+        path: "/lei-complementar",
       },
     ],
     loginDialog: false,
@@ -143,7 +143,7 @@ export default {
 };
 </script>
 
-<!-- <script setup>
+<script setup>
 import { useDark, useToggle } from "@vueuse/core";
 import { useTheme } from 'vuetify'
 
@@ -154,4 +154,4 @@ const toggleDark = useToggle(isDark)
 function toggleTheme () {
   theme.global.name.value = !isDark.value ? 'light' : 'dark'
 }
-</script> -->
+</script>

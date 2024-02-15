@@ -1,6 +1,6 @@
 <template>
-  <v-app class="bg-slate-800">
-    <v-main class="bg-slate-800 text-white h-full font-roboto">
+  <v-app class="bg-slate-200 dark:bg-[#121212]">
+    <v-main class="h-full font-roboto">
       <Navbar
         @logout="logout"
         @logged="logged"
@@ -26,6 +26,8 @@ body {
 <script>
 import Navbar from "./components/Navbar.vue";
 import Footer from "./components/Footer.vue";
+import { useDark } from "@vueuse/core";
+import { useTheme } from 'vuetify'
 
 export default {
   name: "App",
@@ -52,6 +54,10 @@ export default {
   },
   mounted() {
     this.logged();
+
+    const theme = useTheme()
+    var isDark = useDark();
+    theme.global.name.value = !isDark.value ? 'light' : 'dark'
   },
 };
 </script>

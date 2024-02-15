@@ -1,68 +1,93 @@
 <template>
   <v-container>
     <v-row class="text-center mt-2">
-      <v-col cols="12 d-flex justify-center">
-        <v-img
-          :src="require('../assets/logo.png')"
-          class="my-auto"
-          contain
-          max-width="150"
-        />
-        <span class="text-left ml-5 font-mono font-extrabold text-8xl my-auto">
-          <span>Chat</span>
-          <span class="cyan">M</span><span class="orange">Q</span>
-        </span>
+      <v-col>
+        <Logo />
       </v-col>
     </v-row>
-    <v-row>
-      <v-col class="d-flex justify-center">
-        <div
-          class="mt-20 mr-4 w-5/12 d-flex flex-col justify-center border-4 border-[#388f99] active:bg-[#388f9928] rounded-xl text-center py-10 hover:bg-[#388f9911] cursor-pointer"
-          @click="$router.push('groups')"
-        >
-          <div class="self-center pb-2">
-            <img :src="require('../assets/icon-group.png')" width="80" />
-          </div>
-          <div class="font-bold text-2xl">Grupos</div>
-        </div>
-        <div
-          class="mt-20 ml-4 w-5/12 d-flex flex-col justify-center border-4 border-[#f60] hover:bg-[#ff660011] active:bg-[#ff660028] cursor-pointer rounded-xl text-center py-10"
-          @click="$router.push('users')"
-        >
-          <div class="self-center pb-2">
-            <img :src="require('../assets/icon-user.png')" width="80" />
-          </div>
-          <div class="font-bold text-2xl">Usuários</div>
-        </div>
+    <v-row class="mt-16 d-flex justify-center">
+      <v-col cols="10 d-flex justify-center">
+        <v-text-field 
+          id="searchbar"
+          v-model="searchTerm"
+          class="h-[150%]"
+          clearable
+          placeholder="Buscar Termo"
+          variant="solo"
+          append-inner-icon="mdi-send"
+          @click:append-inner="search()"
+          prepend-inner-icon="mdi-magnify"></v-text-field>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col class="d-flex justify-center">
-        <div
-          class="mt-4 w-1/2 d-flex justify-center border-4 border-[#fff] hover:bg-[#ffffff11] active:bg-[#ffffff28] cursor-pointer rounded-lg text-center py-4"
-          @click="$router.push('global')"
-        >
-          <div class="font-bold text-2xl">Chat Global</div>
-        </div>
+    <v-row class="text-center mt-10">
+      <v-col md="3">
+        <v-card class="px-4 pb-4 d-flex flex-col items-center">
+          <v-card-title>FEDERAL</v-card-title>
+          <div class="text-lg w-9/12">Leis Ordinárias</div>
+          <div class="text-2xl mt-2">{{ stats[0] }}</div>
+        </v-card>
+      </v-col>
+      <v-col md="3">
+        <v-card class="px-4 pb-4 d-flex flex-col items-center">
+          <v-card-title>FEDERAL</v-card-title>
+          <div class="text-lg">Leis Complementares</div>
+          <div class="text-2xl mt-2">{{ stats[1] }}</div>
+        </v-card>
+      </v-col>
+      <v-col md="3">
+        <v-card class="px-4 pb-4 d-flex flex-col items-center">
+          <v-card-title>ESTADUAIS</v-card-title>
+          <div class="text-lg">Leis Ordinárias</div>
+          <div class="text-2xl mt-2">{{ stats[2] }}</div>
+        </v-card>
+      </v-col>
+      <v-col md="3">
+        <v-card class="px-4 pb-4 d-flex flex-col items-center">
+          <v-card-title>ESTADUAIS</v-card-title>
+          <div class="text-lg">Leis Complementares</div>
+          <div class="text-2xl mt-2">{{ stats[3] }}</div>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <style>
-.orange {
-  color: #f60;
+#searchbar {
+  height: 100%;
+  font-size: x-large;
 }
-.cyan {
-  color: #388f99;
+
+.v-field__prepend-inner {
+  font-size: x-large;
 }
-.dark-cyan {
-  color: #005163;
+
+.v-field__append-inner {
+  font-size: x-large;
 }
 </style>
 
 <script>
+import Logo from '../components/Logo.vue';
+
 export default {
   name: "HomeView",
+  components: {
+    Logo
+  },
+  data: () => ({
+    searchTerm: "",
+    stats: [
+      1068,
+      23,
+      513,
+      74
+    ]
+  }),
+  methods: {
+    search() {
+      console.log(this.searchTerm);
+    }
+  }
 };
 </script>
