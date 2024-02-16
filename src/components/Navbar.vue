@@ -39,26 +39,73 @@
           </v-tooltip>
         </div>
       </div>
-      <v-dialog v-model="loginDialog" class="w-1/4">
+      <v-dialog v-model="loginDialog" class="w-1/4" persistent>
         <v-card class="d-flex justify-center p-5">
-          <v-card-title class="text-center">Nome</v-card-title>
-          <v-card-text class="text-left">
+          <div class="d-flex text-center">
+            <v-spacer />
+            <v-icon icon="mdi-close hover:bg-[#ff00001d] rounded-lg" @click="loginDialog = false; user = {}" />
+          </div>
+          <v-card-text class="text-center">
             <v-text-field
-              label="Digite seu nome"
-              v-model="username"
+              label="Email"
+              type="email"
+              variant="outlined"
+              v-model="user.email"
               :rules="[rules.required, rules.min, rules.max]"
+            />
+            <v-text-field
+              label="Senha"
+              variant="outlined"
+              v-model="user.password"
+              type="password"
+              :rules="[rules.required, rules.min, rules.maxPassword]"
+            />
+            <span class="mt-4 text-xs text-center">Não possui uma conta?
+              <span class="underline text-blue-400 cursor-pointer" @click="registerDialog = true; loginDialog = false; user = {}">Cadastre-se</span>.
+            </span>
+          </v-card-text>
+          <v-card-actions class="justify-center">
+            <v-btn 
+              :disabled="!(user.email && user.password)"
+              variant="outlined" color="success" @click="login()">
+              Entrar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="registerDialog" class="w-1/4" persistent>
+        <v-card class="d-flex justify-center p-5">
+          <div class="d-flex text-center">
+            <v-spacer />
+            <v-icon icon="mdi-close hover:bg-[#ff00001d] rounded-lg" @click="registerDialog = false; newUser = {}" />
+          </div>
+          <v-card-text class="text-center">
+            <v-text-field
+              label="Nome"
+              variant="outlined"
+              v-model="newUser.name"
+              :rules="[rules.required, rules.minName, rules.maxName]"
+            />
+            <v-text-field
+              label="Email"
+              type="email"
+              variant="outlined"
+              v-model="newUser.email"
+              :rules="[rules.required, rules.min, rules.max]"
+            />
+            <v-text-field
+              label="Senha"
+              variant="outlined"
+              v-model="newUser.password"
+              type="password"
+              :rules="[rules.required, rules.min, rules.maxPassword]"
             />
           </v-card-text>
           <v-card-actions class="justify-center">
-            <v-btn
-              variant="outlined"
-              color="danger"
-              @click="loginDialog = false"
-            >
-              Cancelar
-            </v-btn>
-            <v-btn variant="outlined" color="success" @click="login()">
-              Confirmar
+            <v-btn 
+              :disabled="!(newUser.email && newUser.password && newUser.name)"
+              variant="outlined" color="success" @click="register()">
+              Criar conta
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -78,11 +125,15 @@
 export default {
   name: "NavBar",
   data: () => ({
-    username: null,
+    user: {},
+    newUser: {},
     rules: {
       required: (value) => !!value || "Campo obrigatório.",
-      min: (value) => value.length >= 4 || "Mínimo 4 caracteres.",
-      max: (value) => value.length <= 20 || "Máximo 20 caracteres.",
+      min: (value) => value.length >= 8 || "Mínimo 8 caracteres.",
+      max: (value) => value.length <= 200 || "Máximo 200 caracteres.",
+      minName: (value) => value.length >= 3 || "Mínimo 3 caracteres.",
+      maxName: (value) => value.length <= 50 || "Máximo 50 caracteres.",
+      maxPassword: (value) => value.length <= 32 || "Máximo 32 caracteres.",
     },
     items: [
       {
@@ -103,8 +154,15 @@ export default {
         icon: "mdi-book-open-page-variant-outline",
         path: "/lei-complementar",
       },
+      {
+        id: crypto.randomUUID(),
+        text: 'Pesquisa avançada',
+        icon: "mdi-magnify",
+        path: "/search"
+      }
     ],
     loginDialog: false,
+    registerDialog: false,
   }),
   props: {
     userLogged: Boolean,
@@ -121,24 +179,54 @@ export default {
       this.$emit("logout");
       this.$router.push("/");
     },
-    login() {
-      console.log(this.username);
-      if (!this.username) return this.$toast.error("Campo obrigatório.");
-      if (this.username.length < 4)
-        return this.$toast.error("Nome muito curto.");
-      if (this.username.length > 20)
-        return this.$toast.error("Nome muito logno.");
+    validateUser(user, register = false) {
+      if (!user.email) 
+        return "Email: Campo obrigatório.";
+      if (!user.password)
+        return "Senha: Campo obrigatório.";
+      if (user.email.length < 8)
+        return "Email: mínimo 8 caracteres.";
+      if (user.email.length > 200)
+        return "Email: máximo 200 caracteres.";
+      if (user.password.length < 8)
+        return "Senha: mínimo 8 caracteres.";
+      if (user.email.length > 32)
+        return "Senha: máximo 32 caracteres.";
+      if (register && !user.nome)
+        return "Nome: Campo obrigatório.";
+      if (register && user.nome.length < 3)
+        return "Nome: mínimo 3 caracteres.";
+      if (register && user.nome.length > 50)
+        return "Nome: máximo 50 caracteres.";
 
-      let user = {
-        id: crypto.randomUUID().split("-").join(""),
-        name: this.username,
-      };
+      return null;
+    },
+    login() {
+      let errorValidation = this.validateUser(this.user);
+      if (errorValidation)
+        this.$toast.error(errorValidation);
 
       localStorage.setItem("user", JSON.stringify(user));
       this.loginDialog = false;
       this.$emit("logged");
       this.$router.push("/");
     },
+    register() {
+      let errorValidation = this.validateUser(this.newUser);
+      if (errorValidation)
+        this.$toast.error(errorValidation);
+
+      this.$api.register(this.newUser)
+      .then(() => {
+        this.$toast.success("Conta criada com sucesso!");
+        this.newUser = {};
+        this.registerDialog = false;
+      })
+      .catch(err => {
+        console.log(err.data);
+        this.$toast.error(err.data);
+      })
+    }
   },
 };
 </script>

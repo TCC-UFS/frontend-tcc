@@ -7,11 +7,15 @@ import { loadFonts } from "./plugins/webfontloader";
 import ToastPlugin from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-default.css";
 import "./assets/tailwind.css";
+import { Api } from "./services/api";
 
 loadFonts();
 
-createApp(App)
-  .use(router)
+const app = createApp(App);
+  
+app.config.globalProperties.$api = new Api();
+
+app.use(router)
   .use(store)
   .use(vuetify)
   .use(ToastPlugin)
