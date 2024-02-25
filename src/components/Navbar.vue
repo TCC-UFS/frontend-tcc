@@ -7,7 +7,7 @@
       <ul class="d-flex w-fit justify-start my-auto">
         <li v-for="item in items" :key="item.id">
           <div
-            @click="$router.push(item.path)"
+            @click="$router.push(item.path);"
             class="d-flex dark:hover:bg-emerald-800 hover:bg-emerald-400 cursor-pointer px-4 py-2 rounded-md"
           >
             <v-icon :icon="item.icon" class="my-auto" />
@@ -146,13 +146,13 @@ export default {
         id: crypto.randomUUID(),
         text: "Leis ordinárias",
         icon: "mdi-book-open-page-variant",
-        path: "/lei-ordinaria",
+        path: "/atos?type=lei-ordinaria",
       },
       {
         id: crypto.randomUUID(),
         text: "Leis complementares",
         icon: "mdi-book-open-page-variant-outline",
-        path: "/lei-complementar",
+        path: "/atos?type=lei-complementar",
       },
       {
         id: crypto.randomUUID(),
@@ -201,15 +201,19 @@ export default {
 
       return null;
     },
-    login() {
+    async login() {
       let errorValidation = this.validateUser(this.user);
       if (errorValidation)
         this.$toast.error(errorValidation);
 
-      localStorage.setItem("user", JSON.stringify(user));
-      this.loginDialog = false;
-      this.$emit("logged");
-      this.$router.push("/");
+
+      this.$api.login(this.user)
+      .then(() => {
+        this.loginDialog = false;
+        this.$emit("logged");
+        this.$forceUpdate();
+      })
+      .catch(() => {});
     },
     register() {
       let errorValidation = this.validateUser(this.newUser);
