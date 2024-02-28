@@ -48,7 +48,7 @@ export default {
     logged: function () {
       if (localStorage.getItem("access_token") && !this.userLogged) {
         this.userLogged = true;
-        let user = { name: 'fulano' }
+        let user = JSON.parse(localStorage.getItem('user'));
         this.user = user;
       }
     },

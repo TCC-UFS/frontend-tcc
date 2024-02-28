@@ -5,15 +5,25 @@
             :elevation="4"
             class="mt-8 rounded-lg"
         >
-            <div class="d-flex justify-center w-full">
-                <span v-for="tp in types" :key="tp.id" @click="search(tp.value)"
-                    :class="['cursor-pointer px-3 py-1 rounded-md  mx-2 hover:dark:text-white hover:bg-[#43923745] hover:text-black',
-                    tp.value.toLowerCase() === type ? 'text-green-600' : '']">
-                    {{ tp.name }}
-                </span>
+            <div class="d-flex justify-evenly w-full">
+                <!-- <div class="d-flex justify-center"> -->
+                <v-row class="w-full">
+                    <v-col class="d-flex items-center">
+                        <span v-for="tp in types" :key="tp.id" @click="search(tp.value)"
+                            :class="['cursor-pointer px-3 py-1 rounded-md  mx-2 hover:dark:text-white hover:bg-[#43923745] hover:text-black',
+                            tp.value.toLowerCase() === type ? 'text-green-600' : '']">
+                            {{ tp.name }}
+                        </span>
+                    </v-col>
+                    <v-spacer />
+                    <v-col class="d-flex justify-end mx-4 mt-4" cols="3">
+                        <v-checkbox class="mr-2" v-for="jur in jurisdictions" v-model="filter" :key="jur.id" :label="jur.sigla" :value="jur.sigla"></v-checkbox>
+                    </v-col>
+                </v-row>
+                <!-- </div> -->
             </div>
         </v-toolbar>
-        <v-data-table class="mt-8" :headers="headers" :items="laws">
+        <v-data-table class="mt-8" :headers="headers" :items="filteredResults">
             <template v-slot:item.numero="{ item }">
                 <div class="text-center">
                     <span>
@@ -55,6 +65,7 @@ export default {
   name: "Atos",
   data: () => ({
     type: 'lei-ordinaria',
+    filter: [],
     types: [{
         id: '515415-lo',
         name: 'Leis Ordinárias',
@@ -72,7 +83,8 @@ export default {
         { title: 'Jurisdição', key: 'jurisdicao', value: item => item.jurisdicao.sigla, sortable: false },
         { title: 'Ações', key: 'visualize', value: 'id', sortable: false }
     ],
-    laws: []
+    laws: [],
+    jurisdictions: [],
   }),
   methods: {
     formatDate(date) {
@@ -82,7 +94,17 @@ export default {
         this.type = type;
         this.$api.getAtos({ type: this.type }).then(res => {
             this.laws = res.data;
-        });
+        })
+        .catch(() => {});
+    },
+    loadInitialData() {
+        this.$api.getJurisdictionsDropdown().then(res => {
+            this.jurisdictions = res.data;
+            for (let i = 0; i < this.jurisdictions.length; i++) {
+                this.filter.push(this.jurisdictions[i].sigla);
+            }
+        })
+        .catch(() => {});
     },
     checkQuery() {
         let searchType = this.$route.query["type"];
@@ -93,6 +115,11 @@ export default {
         }
     }
   },
+  computed: {
+    filteredResults() {
+        return this.laws.filter(a => this.filter.includes(a.jurisdicao.sigla))
+    }
+  },
   watch: {
     $route() {
       this.checkQuery();
@@ -100,6 +127,7 @@ export default {
   },
   mounted() {
     this.checkQuery();
+    this.loadInitialData();
   }
 }
 </script>

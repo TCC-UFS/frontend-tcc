@@ -28,11 +28,23 @@ module.exports.Api = class {
         .then(res => {
             let jwt = res.data.accessToken;
             this.setToken(jwt);
+            var user = this.parseJwt(jwt);
+            localStorage.setItem('user', user["unique_name"]);
             localStorage.setItem('access_token', jwt);
         })
         .catch(err => {
             throw err;
         })
+    }
+
+    parseJwt (token) {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+    
+        return JSON.parse(jsonPayload);
     }
 
     getAtos(filter) {
@@ -49,5 +61,13 @@ module.exports.Api = class {
         let query = `?${stringFilter.join("&")}`;
 
         return this.api.get(`/atos${query}`);
+    }
+
+    getAto(id) {
+        return this.api.get(`/atos/${id}`);
+    }
+
+    getJurisdictionsDropdown() {
+        return this.api.get("/jurisdicoes/dropdown");
     }
 }

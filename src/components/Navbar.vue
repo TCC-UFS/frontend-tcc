@@ -26,7 +26,7 @@
         </v-btn>
         <div v-else class="d-flex my-auto mx-2">
           <span class="mx-4 text-xl font-semibold">
-            Olá {{ userData.name }}
+            Olá {{ userData.nome }}
           </span>
           <v-tooltip text="Sair" location="bottom">
             <template v-slot:activator="{ props }">
@@ -171,7 +171,7 @@ export default {
   computed: {
     isUserLogged: function () {
       return this.userLogged;
-    },
+    }
   },
   methods: {
     logout() {
@@ -231,7 +231,7 @@ export default {
         this.$toast.error(err.data);
       })
     }
-  },
+  }
 };
 </script>
 
