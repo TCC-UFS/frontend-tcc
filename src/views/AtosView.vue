@@ -23,7 +23,12 @@
                 <!-- </div> -->
             </div>
         </v-toolbar>
-        <v-data-table class="mt-8" :headers="headers" :items="filteredResults">
+        <v-data-table class="mt-8" :headers="headers" :items="filteredResults"
+                height="50%"
+                no-data-text="Nenhum resultado encontrado"
+                items-per-page-text="Resultados por página:"
+                :items-per-page-options="[10, 25, 50, 100]"
+                loading-text="Carregando">
             <template v-slot:item.numero="{ item }">
                 <div class="text-center">
                     <span>
@@ -48,7 +53,7 @@
                 <div class="text-center">
                     <v-tooltip>
                         <template v-slot:activator="{ props }">
-                            <v-icon v-bind="props" icon="mdi-open-in-app" @click="$router.push(`/visualize/${item.id}`)"></v-icon>
+                            <v-icon v-bind="props" icon="mdi-open-in-new" @click="$router.push(`/visualize/${item.id}`)"></v-icon>
                         </template>
                         Visualizar
                     </v-tooltip>

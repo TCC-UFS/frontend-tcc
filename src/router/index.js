@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import AtosView from "../views/AtosView.vue";
 import VisualizeLawView from "../views/VisualizeLawView.vue";
+import AdvancedSearch from "../views/AdvancedSearchView.vue";
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: "/visualize/:id",
     name: "visualizeLaw",
     component: VisualizeLawView,
+  },
+  {
+    path: "/search",
+    name: "advancedSearch",
+    component: AdvancedSearch
   }
 ];
 

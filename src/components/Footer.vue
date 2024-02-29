@@ -5,7 +5,7 @@
       <v-row>
         <v-col class="self-center">
           <div class="text-center flex-col my-auto">
-            <h1 class="font-semibold text-regular">Portal Legis Ambiental</h1>
+            <h1 class="font-semibold text-regular">Portal Legislativo Ambiental</h1>
             <h1 class="font-semibold text-regular">Universidade Federal de Sergipe</h1>
           </div>
         </v-col>

@@ -1,11 +1,11 @@
 <template>
-    <v-container class="d-flex flex-col items-center h-[100vh]">
+    <v-container class="d-flex flex-col items-center h-fit">
         <div v-if="currentAto.id !== null" class="w-full h-full">
             <div v-if="currentAto.possuiHtml">
                 <div id="content" v-html="sanitize(currentAto.conteudoHtml)"></div>
             </div>
-            <div v-else class="w-full h-full">
-                <iframe width="100%" height="100%" v-if="currentAto.arquivo" :src="b64toBlobUrl(currentAto.arquivo)"></iframe>
+            <div v-else class="w-full h-[90vh]">
+                <iframe width="100%" height="100%" v-if="currentAto.arquivo" :src="b64toBlobUrl(currentAto.arquivo)" />
                 <div v-else class="text-center text-4xl mt-8">Conteúdo não encontrado.</div>
             </div>
         </div>
@@ -31,7 +31,7 @@ export default {
             })
         },
         sanitize (str) {
-            return str.replaceAll(/<a.*?>|<\/a>/g, "").replaceAll(/<p class="Standard" style="margin-right:14\.2pt" align="center">&nbsp;<\/p>/g, "");
+            return str.replaceAll(/<a.*?>|<\/a>/g, "").replaceAll(/&nbsp;/g, "");
         },
         b64toBlobUrl (b64Data, sliceSize=512) {
             if (b64Data) {

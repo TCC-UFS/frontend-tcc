@@ -70,4 +70,12 @@ module.exports.Api = class {
     getJurisdictionsDropdown() {
         return this.api.get("/jurisdicoes/dropdown");
     }
+
+    getStats() {
+        return this.api.get("/atos/stats");
+    }
+
+    getTypes() {
+        return this.api.get("/tipos-atos");
+    }
 }

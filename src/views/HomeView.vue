@@ -24,28 +24,28 @@
         <v-card class="px-4 pb-4 d-flex flex-col items-center">
           <v-card-title>FEDERAL</v-card-title>
           <div class="text-lg w-9/12">Leis Ordinárias</div>
-          <div class="text-2xl mt-2">{{ stats[0] }}</div>
+          <div class="text-2xl mt-2">{{ stats.leisOrdinariasFederais }}</div>
         </v-card>
       </v-col>
       <v-col md="3">
         <v-card class="px-4 pb-4 d-flex flex-col items-center">
           <v-card-title>FEDERAL</v-card-title>
           <div class="text-lg">Leis Complementares</div>
-          <div class="text-2xl mt-2">{{ stats[1] }}</div>
+          <div class="text-2xl mt-2">{{ stats.leisComplementaresFederais }}</div>
         </v-card>
       </v-col>
       <v-col md="3">
         <v-card class="px-4 pb-4 d-flex flex-col items-center">
           <v-card-title>ESTADUAIS</v-card-title>
           <div class="text-lg">Leis Ordinárias</div>
-          <div class="text-2xl mt-2">{{ stats[2] }}</div>
+          <div class="text-2xl mt-2">{{ stats.leisOrdinariasEstaduais }}</div>
         </v-card>
       </v-col>
       <v-col md="3">
         <v-card class="px-4 pb-4 d-flex flex-col items-center">
           <v-card-title>ESTADUAIS</v-card-title>
           <div class="text-lg">Leis Complementares</div>
-          <div class="text-2xl mt-2">{{ stats[3] }}</div>
+          <div class="text-2xl mt-2">{{ stats.leisComplementaresEstaduais }}</div>
         </v-card>
       </v-col>
     </v-row>
@@ -77,17 +77,27 @@ export default {
   },
   data: () => ({
     searchTerm: "",
-    stats: [
-      1068,
-      23,
-      513,
-      74
-    ]
+    stats: {
+      leisOrdinariasFederais: 0,
+      leisOrdinariasEstaduais: 0,
+      leisComplementaresFederais: 0,
+      leisComplementaresEstaduais: 0
+    }
   }),
   methods: {
     search() {
-      console.log(this.searchTerm);
+      if (this.searchTerm) {
+        this.$router.push("/search?term=" + this.searchTerm);
+      }
+    },
+    loadInitialData() {
+      this.$api.getStats().then(res => {
+        this.stats = res.data;
+      })
     }
+  },
+  mounted() {
+    this.loadInitialData();
   }
 };
 </script>
