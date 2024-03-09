@@ -162,7 +162,7 @@ export default {
             this.expandFilters = !this.expandFilters;
         },
         search() {
-            console.log(this.searchData.term);
+            this.$api.search(this.searchData)
         },
         loadInitialData() {
             this.$api.getTypes().then(res => {

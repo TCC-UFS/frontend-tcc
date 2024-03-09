@@ -78,4 +78,8 @@ module.exports.Api = class {
     getTypes() {
         return this.api.get("/tipos-atos");
     }
+
+    search(searchData) {
+        return this.api.post("/search", searchData);
+    }
 }
