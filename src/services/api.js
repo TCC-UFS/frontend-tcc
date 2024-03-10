@@ -78,8 +78,48 @@ module.exports.Api = class {
     getTypes() {
         return this.api.get("/tipos-atos");
     }
-
+    
     search(searchData) {
-        return this.api.post("/search", searchData);
+        var typesMap = {
+            "lei-complementar": 2,
+            "lei-ordinaria": 1
+        }
+        var jurisdictionsEnumMap = {
+            "Federal": "BR",
+            "SE": "SE",
+            "AM": "AM"
+        }
+
+        if (searchData.term) {
+            let data = {
+                termo: searchData.term,
+                grauAprox: searchData.fuzziness,
+                numero: searchData.number,
+                tipo: searchData.type,
+                jurisdicao: jurisdictionsEnumMap[searchData.jurisdiction],
+                order: searchData.order
+            }
+
+            return this.api.post(`/search?page=${searchData.page}&limit=${searchData.limit}`, data);
+        }
+
+        let queries = [];
+
+        if (searchData.number)
+            queries.push(`numero=${searchData.number}`);
+        if (searchData.type)
+            queries.push(`tipo=${searchData.type}`);
+        if (searchData.jurisdiction)
+            queries.push(`jurisdicao=${jurisdictionsEnumMap[searchData.jurisdiction]}`);
+        if (searchData.year)
+            queries.push(`ano=${searchData.year}`)
+        if (searchData.order)
+            queries.push(`order=${searchData.order}`);
+
+        let query = "";
+        if (queries.length > 0)
+            query = `?${queries.join("&")}`;
+
+        return this.api.get(`/atos${query}`);
     }
 }

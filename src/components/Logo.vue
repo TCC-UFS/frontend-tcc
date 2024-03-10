@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex justify-center">
         <v-img
-          :src="require('../assets/logo2.png')"
+          :src="require('../assets/logo.svg')"
           class="my-auto"
           contain
           max-width="200"

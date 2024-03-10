@@ -2,9 +2,9 @@
   <div>
     <div class="d-flex w-100 px-4 py-2 dark:bg-emerald-900 bg-emerald-300">
       <div class="d-flex my-auto mr-2">
-        <img class="w-8" :src="require('../assets/logo.png')" />
+        <img @click="$router.push('/')" class="w-8 cursor-pointer" :src="require('../assets/logo.svg')" />
       </div>
-      <ul class="d-flex w-fit justify-start my-auto">
+      <ul v-if="!isMobile" class="d-flex w-fit justify-start my-auto">
         <li v-for="item in items" :key="item.id">
           <div
             @click="$router.push(item.path);"
@@ -39,7 +39,7 @@
           </v-tooltip>
         </div>
       </div>
-      <v-dialog v-model="loginDialog" class="w-1/4" persistent>
+      <v-dialog v-model="loginDialog" :class="!isMobile ? 'w-1/4' : ''" persistent>
         <v-card class="d-flex justify-center p-5">
           <div class="d-flex text-center">
             <v-spacer />
@@ -73,7 +73,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="registerDialog" class="w-1/4" persistent>
+      <v-dialog v-model="registerDialog" :class="!isMobile ? 'w-1/4' : ''" persistent>
         <v-card class="d-flex justify-center p-5">
           <div class="d-flex text-center">
             <v-spacer />
@@ -138,12 +138,6 @@ export default {
     items: [
       {
         id: crypto.randomUUID(),
-        text: "Home",
-        icon: "mdi-home",
-        path: "/",
-      },
-      {
-        id: crypto.randomUUID(),
         text: "Leis ordinárias",
         icon: "mdi-book-open-page-variant",
         path: "/atos?type=lei-ordinaria",
@@ -171,6 +165,9 @@ export default {
   computed: {
     isUserLogged: function () {
       return this.userLogged;
+    },
+    isMobile() {
+      return this.$vuetify.display.mobile;
     }
   },
   methods: {

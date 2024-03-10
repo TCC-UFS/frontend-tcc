@@ -14,6 +14,7 @@
           clearable
           placeholder="Buscar Termo"
           variant="solo"
+          @keyup.enter="search()"
           append-inner-icon="mdi-send"
           @click:append-inner="search()"
           prepend-inner-icon="mdi-magnify"></v-text-field>
