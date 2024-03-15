@@ -276,7 +276,7 @@
             <v-data-table v-else class="mt-8" :headers="headers" :items="results"
                 disable-sort
                 height="50%"
-                no-data-text="Nenhum resultado encontrado 2"
+                no-data-text="Nenhum resultado encontrado"
                 items-per-page-text="Resultados por página:"
                 :items-per-page-options="[10, 25, 50, 100]"
                 loading-text="Carregando">
